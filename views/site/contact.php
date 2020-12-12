@@ -2,10 +2,11 @@
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
-/* @var $model app\models\ContactForm */
+/* @var $model app\forms\ContactForm */
 
-use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
+
+use yii\bootstrap4\ActiveForm;
+use yii\bootstrap4\Html;
 use yii\captcha\Captcha;
 
 $this->title = 'Contact';
@@ -51,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     <?= $form->field($model, 'body')->textarea(['rows' => 6]) ?>
 
-                    <?= $form->field($model, 'verifyCode')->widget(Captcha::className(), [
+                    <?= $form->field($model, 'verifyCode')->widget(Captcha::class, [
                         'template' => '<div class="row"><div class="col-lg-3">{image}</div><div class="col-lg-6">{input}</div></div>',
                     ]) ?>
 
