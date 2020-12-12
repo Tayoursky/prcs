@@ -6,6 +6,7 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
 /**
@@ -29,6 +30,9 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
+
+    const ROLE_ADMIN = 'admin';
+    const ROLE_USER = 'user';
 
 
     /**
@@ -55,6 +59,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+            ['role', 'default', 'value' => self::ROLE_USER],
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
         ];
@@ -211,5 +216,44 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+    public static function getStatusesArray()
+    {
+        return [
+            self::STATUS_DELETED => 'Deleted',
+            self::STATUS_ACTIVE => 'Active',
+            self::STATUS_INACTIVE => 'Inactive',
+        ];
+    }
+
+    public function getStatusName()
+    {
+        return ArrayHelper::getValue(self::getStatusesArray(), $this->status);
+    }
+
+    public static function getRolesArray()
+    {
+        return [
+            self::ROLE_ADMIN => 'admin',
+            self::ROLE_USER => 'user',
+        ];
+    }
+
+    public function getRolesName()
+    {
+        return ArrayHelper::getValue(self::getRolesArray(), $this->role);
+    }
+
+    public function isAdmin()
+    {
+        return $this->role == self::ROLE_ADMIN;
+    }
+
+    public function isUser()
+    {
+        return $this->role == self::ROLE_USER;
+    }
+
+
 
 }
